@@ -2,10 +2,12 @@ name: job watch
 
 on:
   schedule:
-    # Every 15 minutes. GitHub runs scheduled workflows on a best-effort basis and
-    # routinely fires them 5 to 20 minutes late, especially on the hour. Treat the
-    # real latency as 15 to 35 minutes.
-    - cron: "*/15 * * * *"
+    # Every 2 hours at 17 past. Two deliberate choices. GitHub throttles scheduled
+    # workflows hardest when they fire often, and a */15 cron here was dropped
+    # entirely for six hours straight with no failed run to show for it. And :17
+    # avoids the top of the hour, when most of GitHub's cron jobs fire at once.
+    # Expect the run to start a few minutes after :17 even when it works.
+    - cron: "17 */2 * * *"
   workflow_dispatch:
 
 # Never let two runs overlap: both would read the same state and the second would

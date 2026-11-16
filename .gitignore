@@ -3,3 +3,4 @@ __pycache__/
 digest.md
 .DS_Store
 .env
+local-run.log

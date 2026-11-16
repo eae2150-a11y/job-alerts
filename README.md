@@ -1,6 +1,6 @@
 # job-alerts
 
-Checks every company on the watchlist every 15 minutes and alerts on new postings
+Checks every company on the watchlist every 2 hours and alerts on new postings
 that match the filters. Email plus a phone push. Runs on GitHub Actions, so nothing
 needs to be open on a laptop.
 
@@ -103,6 +103,29 @@ search for it.
 Widening `keep_locations` floods the next run, because every posting in the new
 bucket is unseen. Run `python3 run.py --seed` first to absorb them silently, then
 commit `state.json` with the config change.
+
+**When GitHub's scheduler does not run.** The cron in `watch.yml` is best effort.
+GitHub throttles frequent schedules on public repos and sometimes drops them for
+hours at a stretch, which is invisible: the workflow still reads active and manual
+runs still work. A `*/15` cron here was dropped for six hours straight, which is why
+the schedule is now every 2 hours at :17 past, off the congested top of the hour. Check with
+`curl -s https://api.github.com/repos/eae2150-a11y/job-alerts/actions/runs | grep -c schedule`.
+
+If it has gone quiet, run the watcher from the Mac instead:
+
+```
+./local-fallback.sh install <ntfy-topic>
+```
+
+That writes a launchd agent to `~/Library/LaunchAgents`, outside this repo, so the
+topic stays private. It runs `run.py` every 2 hours while the Mac is awake and
+pushes to the same ntfy topic. `./local-fallback.sh status` shows the last runs,
+`uninstall` removes it.
+
+Local runs update `state.json` without committing it, so run both the local agent
+and a live GitHub cron and each will re-alert on what the other already claimed.
+Pick one. To drop the GitHub side, delete the `schedule:` block from
+`.github/workflows/watch.yml` and keep `workflow_dispatch` for manual runs.
 
 **Adding a company.** Add to `watchlist.json` with its ATS type and slug. Verify the
 slug first, for example `curl -s -o /dev/null -w "%{http_code}" https://api.ashbyhq.com/posting-api/job-board/SLUG`

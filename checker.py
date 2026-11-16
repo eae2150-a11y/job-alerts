@@ -288,7 +288,7 @@ def wanted(j):
 NO_GEOGRAPHY = re.compile(
     r"\b(?:fully|mostly|partially|100%?|remote|anywhere|distributed|hybrid|flexible"
     r"|work\s*from\s*home|wfh|based|friendly|first|only|optional|preferred|team|office"
-    r"|位置|location)\b", re.I)
+    r"|location)\b", re.I)
 BROAD_REGION = re.compile(
     r"\b(?:us|usa|u\.s\.a?|united\s+states|eu|emea|europe|european|global|worldwide"
     r"|americas|north\s+america|\bna\b)\b", re.I)
