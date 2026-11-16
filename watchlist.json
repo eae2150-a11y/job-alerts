@@ -1,0 +1,215 @@
+{
+  "_comment": "company -> applicant tracking system + board slug. Verify a new one with probe.py before adding. google/microsoft/amazon are query-driven big boards: they take optional 'queries' and 'locations' lists, defaulting to DEFAULT_QUERIES and New York. Referral contacts live in referrals.json.",
+  "Anthropic": {
+    "ats": "greenhouse",
+    "slug": "anthropic"
+  },
+  "OpenAI": {
+    "ats": "ashby",
+    "slug": "openai"
+  },
+  "ElevenLabs": {
+    "ats": "ashby",
+    "slug": "elevenlabs"
+  },
+  "Scale AI": {
+    "ats": "greenhouse",
+    "slug": "scaleai"
+  },
+  "Cognition": {
+    "ats": "ashby",
+    "slug": "cognition"
+  },
+  "Sierra": {
+    "ats": "ashby",
+    "slug": "sierra"
+  },
+  "Decagon": {
+    "ats": "ashby",
+    "slug": "decagon"
+  },
+  "Harvey": {
+    "ats": "ashby",
+    "slug": "harvey"
+  },
+  "Dream Labs": {
+    "ats": "page",
+    "url": "https://dreamlabs.ai/careers",
+    "pattern": "<span class=\"t\">(.*?)</span>\\s*<span class=\"loc\">(.*?)</span>"
+  },
+  "AMI Labs": {
+    "ats": "ashby",
+    "slug": "ami"
+  },
+  "Atomic Machines": {
+    "ats": "greenhouse",
+    "slug": "atomicmachines"
+  },
+  "Baseten": {
+    "ats": "ashby",
+    "slug": "baseten"
+  },
+  "Black Forest Labs": {
+    "ats": "ashby",
+    "slug": "black-forest-labs"
+  },
+  "Blitzy": {
+    "ats": "ashby",
+    "slug": "blitzy"
+  },
+  "Cerebras": {
+    "ats": "ashby",
+    "slug": "cerebras"
+  },
+  "Colossal Biosciences": {
+    "ats": "greenhouse",
+    "slug": "colossalbiosciences"
+  },
+  "CuspAI": {
+    "ats": "ashby",
+    "slug": "cuspai"
+  },
+  "EliseAI": {
+    "ats": "ashby",
+    "slug": "eliseai"
+  },
+  "Figure": {
+    "ats": "greenhouse",
+    "slug": "figure"
+  },
+  "Fireworks AI": {
+    "ats": "ashby",
+    "slug": "fireworks"
+  },
+  "Fuse": {
+    "ats": "ashby",
+    "slug": "fuse"
+  },
+  "Hercules": {
+    "ats": "ashby",
+    "slug": "hercules"
+  },
+  "Lambda": {
+    "ats": "ashby",
+    "slug": "lambda"
+  },
+  "Lila Sciences": {
+    "ats": "greenhouse",
+    "slug": "lilasciences"
+  },
+  "Liquid AI": {
+    "ats": "ashby",
+    "slug": "liquid-ai"
+  },
+  "Modal": {
+    "ats": "ashby",
+    "slug": "modal"
+  },
+  "Molg": {
+    "ats": "ashby",
+    "slug": "molg"
+  },
+  "Palantir": {
+    "ats": "lever",
+    "slug": "palantir"
+  },
+  "Parallel Bio": {
+    "ats": "ashby",
+    "slug": "parallel-bio"
+  },
+  "Periodic Labs": {
+    "ats": "ashby",
+    "slug": "periodic-labs"
+  },
+  "Physical Intelligence": {
+    "ats": "ashby",
+    "slug": "physicalintelligence"
+  },
+  "Prime Intellect": {
+    "ats": "ashby",
+    "slug": "primeintellect"
+  },
+  "Reflection AI": {
+    "ats": "ashby",
+    "slug": "reflectionai"
+  },
+  "Rhoda AI": {
+    "ats": "ashby",
+    "slug": "rhoda-ai"
+  },
+  "Sage Care": {
+    "ats": "ashby",
+    "slug": "sagecare"
+  },
+  "Surge AI": {
+    "ats": "ashby",
+    "slug": "surge-ai"
+  },
+  "Thinking Machines Lab": {
+    "ats": "ashby",
+    "slug": "thinkingmachines"
+  },
+  "Together AI": {
+    "ats": "greenhouse",
+    "slug": "togetherai"
+  },
+  "Vise": {
+    "ats": "ashby",
+    "slug": "vise"
+  },
+  "Wayve": {
+    "ats": "ashby",
+    "slug": "wayve"
+  },
+  "Work Helix": {
+    "ats": "greenhouse",
+    "slug": "workhelix"
+  },
+  "World Labs": {
+    "ats": "ashby",
+    "slug": "worldlabs"
+  },
+  "Writer": {
+    "ats": "ashby",
+    "slug": "writer"
+  },
+  "Runway": {
+    "ats": "ashby",
+    "slug": "runway-ml"
+  },
+  "Odyssey": {
+    "ats": "ashby",
+    "slug": "odysseyml"
+  },
+  "Tutor Intelligence": {
+    "ats": "lever",
+    "slug": "tutorintelligence"
+  },
+  "Recursive": {
+    "ats": "ashby",
+    "slug": "recursive-superintelligence"
+  },
+  "Google": {
+    "ats": "google",
+    "locations": [
+      "New York"
+    ]
+  },
+  "Microsoft": {
+    "ats": "microsoft",
+    "locations": [
+      "New York",
+      "Redmond"
+    ]
+  },
+  "Amazon": {
+    "ats": "amazon",
+    "locations": [
+      "New York"
+    ]
+  },
+  "Factory": {
+    "ats": "ashby",
+    "slug": "factory"
+  }
+}

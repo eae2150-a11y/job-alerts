@@ -1,0 +1,50 @@
+name: job watch
+
+on:
+  schedule:
+    # Every 15 minutes. GitHub runs scheduled workflows on a best-effort basis and
+    # routinely fires them 5 to 20 minutes late, especially on the hour. Treat the
+    # real latency as 15 to 35 minutes.
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+# Never let two runs overlap: both would read the same state and the second would
+# re-alert on everything the first already claimed.
+concurrency:
+  group: job-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check boards and alert
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          ALERT_TO: ${{ secrets.ALERT_TO }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python3 run.py
+
+      - name: Commit state if it changed
+        run: |
+          if [ -n "$(git status --porcelain state.json unresolved.json)" ]; then
+            git config user.name "job-watch"
+            git config user.email "actions@github.com"
+            git add state.json unresolved.json
+            git commit -m "state: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push
+          else
+            echo "nothing to commit"
+          fi

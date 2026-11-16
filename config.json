@@ -1,0 +1,61 @@
+{
+  "_comment": "Edit this file to change what gets alerted. Patterns are Python regex, case-insensitive, matched against the job title (and the blurb where a board gives one). Commit a change here and the next run picks it up.",
+
+  "want": [
+    "forward.deployed", "applied\\s+ai",
+    "solutions?\\s+(architect|engineer|consultant|specialist|lead)",
+    "customer\\s+(engineer|success|solutions)",
+    "technical\\s+account", "sales\\s+engineer", "deployment", "implementation",
+    "deployed\\s+staff",
+    "gtm\\b", "go.to.market",
+    "account\\s+executive", "business\\s+development",
+    "partnerships?\\b",
+    "product\\s+manager", "product\\s+management",
+    "strategy", "strategic\\s+initiative",
+    "business\\s+operations", "biz\\s*ops", "strat\\s*ops",
+    "chief\\s+of\\s+staff",
+    "\\bpolicy\\b", "global\\s+affairs", "external\\s+affairs", "public\\s+sector",
+    "trust\\s+and\\s+safety", "trust\\s*&\\s*safety",
+    "operations\\s+(lead|manager|associate|analyst)"
+  ],
+
+  "_want_note": "early matches bypass the role-family filter entirely, because these reqs open once and close fast",
+  "early": [
+    "\\bmba\\b", "university\\s+grad", "new\\s+grad",
+    "graduate\\s+(program|programme|role)",
+    "early\\s+(career|in\\s+career|in\\s+profession)",
+    "campus\\s+hire", "rotational", "\\baspire\\b",
+    "associate\\s+product\\s+manager", "\\bapm\\b"
+  ],
+
+  "_skip_note": "screened out on the title alone. Seniority first, then functions that are not hers.",
+  "skip": [
+    "^(sr\\.?|senior|staff|lead|principal|head|chief\\s+(technology|financial|revenue|people))\\b",
+    "\\b(sr\\.?|senior|staff|principal)\\s",
+    "\\b(iii|iv|v|vi)\\b",
+    "^(director|vp\\b|vice\\s+president)",
+    "\\b(director|vice\\s+president)\\b",
+    "engineering\\s+manager", "\\bmanager\\s+(ii|iii|iv)\\b",
+    "(software|ml|machine\\s+learning|infrastructure|security|platform|backend|frontend|data|research)\\s+engineer",
+    "research\\s+(scientist|engineer)",
+    "\\brecruiter\\b", "recruiting", "\\bsourcer\\b",
+    "accountant", "controller", "\\bcounsel\\b", "paralegal", "\\blegal\\b",
+    "data\\s+scientist", "hardware", "mechanical",
+    "\\bintern\\b", "internship",
+    "communications", "systems\\s+analyst", "payroll",
+    "executive\\s+assistant", "\\bsde\\b", "\\btax\\b",
+    "designer", "\\bdevrel\\b", "developer\\s+relations"
+  ],
+
+  "_locations_note": "a posting is alerted only if it lands in one of these buckets. Remove 'US' to go New York and remote only.",
+  "keep_locations": ["NY", "Remote", "US"],
+
+  "_chief_of_staff_note": "chief of staff is in 'want' and the generic ^chief skip only blocks CTO/CFO/CRO/CPO, so Chief of Staff survives. Verified.",
+
+  "alerts": {
+    "email": true,
+    "ntfy": true,
+    "ntfy_topic_env": "NTFY_TOPIC",
+    "max_per_run": 40
+  }
+}
