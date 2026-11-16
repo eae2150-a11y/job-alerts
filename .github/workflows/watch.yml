@@ -10,8 +10,12 @@ on:
 
 # Never let two runs overlap: both would read the same state and the second would
 # re-alert on everything the first already claimed.
+#
+# The group name is versioned on purpose. A run that gets stuck in GitHub's queue
+# cannot be cancelled and blocks every later run in its group, which would silently
+# stop the watcher forever. If that happens again, bump the suffix and push.
 concurrency:
-  group: job-watch
+  group: job-watch-v2
   cancel-in-progress: false
 
 permissions:
