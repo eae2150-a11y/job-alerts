@@ -81,9 +81,28 @@ workflow_dispatch to confirm the secrets work.
 
 **Editing what gets alerted.** `config.json`. `want` is the role families, `early`
 bypasses the role filter for MBA and new-grad reqs that open once and close fast,
-`skip` screens on the title alone and handles seniority. `keep_locations` is
-`NY`, `Remote`, `US`; drop `US` to tighten to New York and remote only. Commit and
-the next run uses it.
+`skip` screens on the title alone and handles seniority. Commit and the next run
+uses it.
+
+**Where she would work.** `location_buckets` in `config.json` maps a posting's
+location string to a bucket, and `keep_locations` lists the buckets that get
+alerted: `NY`, `London`, `Paris`, `SF`, `Remote`. Bucket order is priority, so a
+posting listing both New York and San Francisco counts as NY and sorts to the top
+of the alert. Anything else, Seattle, Arlington, Dublin, Tokyo, Bangalore, is
+dropped. Remote is the one bucket that gets a second test: `remote_anywhere()` in
+`checker.py` strips the words that carry no geography and requires nothing to be
+left, so `Remote (US)` and `Fully remote` qualify while `Remote - India` and
+`Remote, Dublin` do not. Boards set a remote flag on city-anchored roles all the
+time, and that flag alone no longer passes a posting.
+
+Google, Microsoft and Amazon have no public board to list, so they are queried per
+city. Their `locations` lists in `watchlist.json` must be kept in step with
+`keep_locations` by hand: adding a bucket to the config does not make those three
+search for it.
+
+Widening `keep_locations` floods the next run, because every posting in the new
+bucket is unseen. Run `python3 run.py --seed` first to absorb them silently, then
+commit `state.json` with the config change.
 
 **Adding a company.** Add to `watchlist.json` with its ATS type and slug. Verify the
 slug first, for example `curl -s -o /dev/null -w "%{http_code}" https://api.ashbyhq.com/posting-api/job-board/SLUG`
