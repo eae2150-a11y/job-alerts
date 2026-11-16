@@ -58,26 +58,39 @@ DEFAULT_QUERIES = ["forward deployed", "applied ai", "customer engineer",
 
 def load_config(path=None):
     """Rebuild WANT / EARLY / SKIP from config.json so filters are editable without code."""
-    global WANT, EARLY, SKIP, KEEP_LOCATIONS, CONFIG
+    global WANT, EARLY, SKIP, KEEP_LOCATIONS, LOCATION_BUCKETS, CONFIG
     cfg = json.loads((pathlib.Path(path) if path else HERE / "config.json").read_text())
     joined = lambda key: re.compile("|".join(f"(?:{x})" for x in cfg[key]), re.I)
     WANT, EARLY, SKIP = joined("want"), joined("early"), joined("skip")
-    KEEP_LOCATIONS = tuple(cfg.get("keep_locations", ["NY", "Remote", "US"]))
+    KEEP_LOCATIONS = tuple(cfg.get("keep_locations", DEFAULT_KEEP))
+    if cfg.get("location_buckets"):
+        # JSON preserves key order, and order is the bucket priority.
+        LOCATION_BUCKETS = [(name, re.compile(pat, re.I))
+                            for name, pat in cfg["location_buckets"].items()]
     CONFIG = cfg
     return cfg
 
 
 CONFIG = {}
-KEEP_LOCATIONS = ("NY", "Remote", "US")
+DEFAULT_KEEP = ["NY", "London", "Paris", "SF", "Remote"]
+KEEP_LOCATIONS = tuple(DEFAULT_KEEP)
 
 
 class UnresolvedATS(Exception):
     """Raised when a company's board type is unknown, so run.py can log it for fixing."""
 
 
-NY = re.compile(r"new york|nyc|\bny\b|brooklyn|manhattan", re.I)
 REMOTE = re.compile(r"remote|anywhere|distributed", re.I)
-US = re.compile(r"united states|\bu\.?s\.?a?\b|san francisco|seattle|boston|austin|chicago|los angeles", re.I)
+
+# Fallbacks used only if config.json has no location_buckets block. The live patterns
+# live in config.json so she can edit them without touching code. Order is priority.
+LOCATION_BUCKETS = [
+    ("NY", re.compile(r"new york|nyc|\bny\b|brooklyn|manhattan", re.I)),
+    ("London", re.compile(r"\blondon\b(?!,?\s*(?:on|ont|ontario))|united kingdom|\buk\b|\bengland\b", re.I)),
+    ("Paris", re.compile(r"\bparis\b(?!,?\s*(?:tx|texas))|\bfrance\b", re.I)),
+    ("SF", re.compile(r"san francisco|\bsfo?\b|bay area|palo alto|mountain view|menlo park|sunnyvale|redwood city|\boakland\b", re.I)),
+    ("Remote", REMOTE),
+]
 
 
 def fetch(url, tries=4):
@@ -270,14 +283,39 @@ def wanted(j):
     return bool(WANT.search(hay)) and not SKIP.search(t)
 
 
+# Words that carry no geography. Stripping them from a location string leaves the
+# place behind, which is how Remote gets told apart from "Remote - India".
+NO_GEOGRAPHY = re.compile(
+    r"\b(?:fully|mostly|partially|100%?|remote|anywhere|distributed|hybrid|flexible"
+    r"|work\s*from\s*home|wfh|based|friendly|first|only|optional|preferred|team|office"
+    r"|位置|location)\b", re.I)
+BROAD_REGION = re.compile(
+    r"\b(?:us|usa|u\.s\.a?|united\s+states|eu|emea|europe|european|global|worldwide"
+    r"|americas|north\s+america|\bna\b)\b", re.I)
+
+
+def remote_anywhere(loc):
+    """True when the location string says remote and names no particular place.
+    'Remote (US)' and 'Fully remote' qualify. 'Remote - India' and 'Remote, Dublin'
+    do not, because those roles are anchored to a city she would not move to."""
+    residue = BROAD_REGION.sub(" ", NO_GEOGRAPHY.sub(" ", loc))
+    return not re.search(r"[^\W\d_]", residue)
+
+
 def where(j):
-    loc = j["location"]
-    if NY.search(loc):
-        return "NY"
-    if j["remote"] or REMOTE.search(loc):
+    """Bucket a posting by its location string. First matching pattern wins, so a
+    posting listing several cities takes the highest-priority one it mentions."""
+    loc = j["location"] or ""
+    for name, rx in LOCATION_BUCKETS:
+        if not rx.search(loc):
+            continue
+        # Remote is the one bucket that can be faked by a city with a remote flag on it.
+        if name == "Remote" and not remote_anywhere(loc):
+            return "Other"
+        return name
+    # No location text at all, and the board flagged it remote.
+    if j["remote"] and not loc.strip():
         return "Remote"
-    if US.search(loc):
-        return "US"
     return "Other"
 
 

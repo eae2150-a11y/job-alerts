@@ -192,20 +192,28 @@
   "Google": {
     "ats": "google",
     "locations": [
-      "New York"
+      "New York",
+      "London",
+      "Paris",
+      "San Francisco"
     ]
   },
   "Microsoft": {
     "ats": "microsoft",
     "locations": [
       "New York",
-      "Redmond"
+      "London",
+      "Paris",
+      "San Francisco"
     ]
   },
   "Amazon": {
     "ats": "amazon",
     "locations": [
-      "New York"
+      "New York",
+      "London",
+      "Paris",
+      "San Francisco"
     ]
   },
   "Factory": {

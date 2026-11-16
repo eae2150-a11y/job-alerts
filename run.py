@@ -49,8 +49,10 @@ def collect(watch):
         seen = set(state.get(company, []))
         new = [j for j in matches if j["id"] not in seen]
         if new:
-            found[company] = sorted(new, key=lambda j: ({"NY": 0, "Remote": 1, "US": 2}
-                                                        [checker.where(j)], j["title"]))
+            # Sort by the bucket order in config.json, so New York roles sit at the top.
+            order = {name: i for i, name in enumerate(checker.KEEP_LOCATIONS)}
+            found[company] = sorted(new, key=lambda j: (order.get(checker.where(j), 99),
+                                                        j["title"]))
     return found, fresh, unresolved, errors, seeding
 
 
