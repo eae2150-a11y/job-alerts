@@ -19,6 +19,8 @@
     "product\\s+management",
     "strategy",
     "strategic\\s+initiative",
+    "(deal|revenue)\\s+operations",
+    "strategist",
     "business\\s+operations",
     "biz\\s*ops",
     "strat\\s*ops",
