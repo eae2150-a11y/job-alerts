@@ -86,7 +86,8 @@
     "sell.?side",
     "buy.?side",
     "media\\s+(buying|planning)",
-    "\\bad\\s+(sales|operations|ops|tech|products?)\\b"
+    "\\bad\\s+(sales|operations|ops|tech|products?)\\b",
+    "(content|brand|social|seo|communications)\\s+strategist"
   ],
   "_locations_note": "A posting is alerted only if its location string lands in one of the buckets listed in keep_locations. Order matters: the first pattern that matches wins, so NY sits above Remote and 'Remote - New York' counts as NY. Drop a bucket from keep_locations to stop alerting on it without deleting its pattern.",
   "location_buckets": {

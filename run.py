@@ -68,10 +68,15 @@ def render(found, cap):
             shown += 1
             tag = checker.where(j)
             loc = j["location"] or tag
-            lines.append(f"  [{tag}] {j['title']}  ({loc})\n       {j['url']}")
+            # Age matters: most open roles have been open for months, so a genuinely
+            # fresh req is worth treating differently from an evergreen pipeline one.
+            age = checker.age_label(j.get("posted"))
+            age_txt = f" · {age}" if age else ""
+            lines.append(f"  [{tag}] {j['title']}  ({loc}){age_txt}\n       {j['url']}")
             html_rows.append(
                 f"<li><a href='{html.escape(j['url'])}'>{html.escape(j['title'])}</a>"
-                f" <span style='color:#666'>{html.escape(tag)} &middot; {html.escape(loc)}</span></li>")
+                f" <span style='color:#666'>{html.escape(tag)} &middot; {html.escape(loc)}"
+                f"{html.escape(age_txt)}</span></li>")
         html_rows.append("</ul>")
     if total > cap:
         lines.append(f"\n({total - cap} more not shown)")

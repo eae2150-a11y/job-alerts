@@ -9,6 +9,7 @@ Writes a digest of what is NEW since last time.
   python3 watch.py --all      # report every current match, ignore state
   python3 watch.py --seed     # record current postings as the baseline, report nothing
 """
+import datetime
 import json, re, sys, urllib.request, urllib.parse, datetime, pathlib
 
 HERE = pathlib.Path(__file__).parent
@@ -139,7 +140,8 @@ def postings(company, cfg):
             loc = (j.get("location") or {}).get("name", "")
             out.append(dict(id=str(j["id"]), title=j.get("title", ""), team="", blurb="",
                             location=loc, remote=bool(REMOTE.search(loc)),
-                            url=j.get("absolute_url", ""), posted=j.get("updated_at", "")))
+                            url=j.get("absolute_url", ""),
+                            posted=j.get("first_published") or j.get("updated_at", "")))
     elif ats == "ashby":
         d = fetch(f"https://api.ashbyhq.com/posting-api/job-board/{slug}")
         for j in d.get("jobs", []):
@@ -155,7 +157,8 @@ def postings(company, cfg):
             loc = cats.get("location", "") or ""
             out.append(dict(id=j["id"], title=j.get("text", ""), team=cats.get("team", "") or "", blurb="",
                             location=loc, remote=bool(REMOTE.search(loc)),
-                            url=j.get("hostedUrl", ""), posted=""))
+                            url=j.get("hostedUrl", ""),
+                            posted=_from_epoch_ms(j.get("createdAt"))))
     elif ats == "page":
         # Hand-rolled careers page with no applicant-tracking system behind it.
         # cfg["url"] is the page; cfg["pattern"] pulls out one posting per match.
@@ -268,6 +271,40 @@ def postings(company, cfg):
     else:
         raise UnresolvedATS(f"unknown ats {ats!r}")
     return out
+
+
+def _from_epoch_ms(ms):
+    """Lever hands back createdAt as epoch milliseconds. Everything else is ISO."""
+    try:
+        return datetime.datetime.fromtimestamp(int(ms) / 1000, datetime.timezone.utc).isoformat()
+    except Exception:
+        return ""
+
+
+def age_label(posted):
+    """Short human age for a posting, so a 16-minute-old req reads differently from a
+    400-day-old evergreen one. Empty string when the board publishes no date."""
+    if not posted:
+        return ""
+    try:
+        t = datetime.datetime.fromisoformat(str(posted).replace("Z", "+00:00"))
+    except Exception:
+        return ""
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=datetime.timezone.utc)
+    secs = (datetime.datetime.now(datetime.timezone.utc) - t).total_seconds()
+    if secs < 0:
+        return ""
+    mins = int(secs // 60)
+    if mins < 60:
+        return f"{mins}m old"
+    hours = mins // 60
+    if hours < 48:
+        return f"{hours}h old"
+    days = hours // 24
+    if days < 60:
+        return f"{days}d old"
+    return f"{days // 30}mo old"
 
 
 def keep_location(j):
