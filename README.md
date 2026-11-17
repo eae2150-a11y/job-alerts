@@ -81,12 +81,11 @@ workflow_dispatch to confirm the secrets work.
 
 **Editing what gets alerted.** `config.json`. `want` is the role families, `early`
 bypasses the role filter for MBA and new-grad reqs that open once and close fast,
-`skip` screens on the title alone and handles seniority. Commit and the next run
-uses it.
+`skip` screens on the title alone, handles seniority, and drops advertising roles: ads, adtech, sellside, media buying and anything under Google's gTech org. Commit and the next run uses it.
 
 **Where she would work.** `location_buckets` in `config.json` maps a posting's
 location string to a bucket, and `keep_locations` lists the buckets that get
-alerted: `NY`, `London`, `Paris`, `SF`, `Remote`. Bucket order is priority, so a
+alerted: `NY`, `London`, `Paris`, `SF`, `Germany`, `Remote`. Germany covers Berlin, Munich, Hamburg, Frankfurt, Cologne, Stuttgart and Dusseldorf, and sits above Remote so `Remote, Berlin` counts as Germany. Bucket order is priority, so a
 posting listing both New York and San Francisco counts as NY and sorts to the top
 of the alert. Anything else, Seattle, Arlington, Dublin, Tokyo, Bangalore, is
 dropped. Remote is the one bucket that gets a second test: `remote_anywhere()` in

@@ -44,7 +44,7 @@
     "associate\\s+product\\s+manager",
     "\\bapm\\b"
   ],
-  "_skip_note": "screened out on the title alone. Seniority first, then functions that are not hers.",
+  "_skip_note": "Screened out on the title alone. Seniority first, then functions that are not hers, then advertising: she is not interested in Google Ads or ad sales.",
   "skip": [
     "^(sr\\.?|senior|staff|lead|principal|head|chief\\s+(technology|financial|revenue|people))\\b",
     "\\b(sr\\.?|senior|staff|principal)\\s",
@@ -76,7 +76,15 @@
     "\\btax\\b",
     "designer",
     "\\bdevrel\\b",
-    "developer\\s+relations"
+    "developer\\s+relations",
+    "\\bads\\b",
+    "advertis",
+    "\\badtech\\b",
+    "\\bgtech\\b",
+    "sell.?side",
+    "buy.?side",
+    "media\\s+(buying|planning)",
+    "\\bad\\s+(sales|operations|ops|tech|products?)\\b"
   ],
   "_locations_note": "A posting is alerted only if its location string lands in one of the buckets listed in keep_locations. Order matters: the first pattern that matches wins, so NY sits above Remote and 'Remote - New York' counts as NY. Drop a bucket from keep_locations to stop alerting on it without deleting its pattern.",
   "location_buckets": {
@@ -84,6 +92,7 @@
     "London": "\\blondon\\b(?!,?\\s*(?:on|ont|ontario))|united kingdom|\\buk\\b|\\bengland\\b",
     "Paris": "\\bparis\\b(?!,?\\s*(?:tx|texas))|\\bfrance\\b",
     "SF": "san francisco|\\bsfo?\\b|bay area|palo alto|mountain view|menlo park|sunnyvale|redwood city|\\boakland\\b",
+    "Germany": "\\bgermany\\b|\\bberlin\\b|munich|m\u00fcnchen|hamburg|frankfurt|cologne|k\u00f6ln|stuttgart|d\u00fcsseldorf|dusseldorf",
     "Remote": "remote|anywhere|distributed"
   },
   "keep_locations": [
@@ -91,6 +100,7 @@
     "London",
     "Paris",
     "SF",
+    "Germany",
     "Remote"
   ],
   "_chief_of_staff_note": "chief of staff is in 'want' and the generic ^chief skip only blocks CTO/CFO/CRO/CPO, so Chief of Staff survives. Verified.",

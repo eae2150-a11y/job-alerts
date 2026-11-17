@@ -195,7 +195,9 @@
       "New York",
       "London",
       "Paris",
-      "San Francisco"
+      "San Francisco",
+      "Berlin",
+      "Munich"
     ]
   },
   "Microsoft": {
@@ -204,7 +206,9 @@
       "New York",
       "London",
       "Paris",
-      "San Francisco"
+      "San Francisco",
+      "Berlin",
+      "Munich"
     ]
   },
   "Amazon": {
@@ -213,7 +217,9 @@
       "New York",
       "London",
       "Paris",
-      "San Francisco"
+      "San Francisco",
+      "Berlin",
+      "Munich"
     ]
   },
   "Factory": {
